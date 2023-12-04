@@ -1,5 +1,5 @@
-const phoneLoad = async() =>{
-    const response = await fetch("https://openapi.programming-hero.com/api/phones?search=iphone");
+const phoneLoad = async(searchText ,) =>{
+    const response = await fetch(`https://openapi.programming-hero.com/api/phones?search=${searchText}`);
     const data = await response.json();
     const phones = data.data
     // console.log(phones)
@@ -8,10 +8,24 @@ const phoneLoad = async() =>{
 
  const DisplayPhones =(phones) =>{
   const phoneContainer = document.getElementById("phone-container");
+
+  //  Display first ten
+   const showAll =document.getElementById("showAll")
+  console.log(phones.length);
+   if(phones.length > 9){
+       showAll.classList.remove("hidden")
+   }else{
+    showAll.classList.add("hidden")
+   }
+        phones = phones.slice(0 , 9);
+
+   
+  phoneContainer.textContent = ''
    phones.forEach(phone =>{
      console.log(phone)
   
        const phoneCard =document.createElement('div');
+       
        phoneCard.classList = "card p-4 bg-gray-300 shadow-xl";
        phoneCard.innerHTML = `
        <figure><img src="${phone.image}" alt="Shoes" /></figure>
@@ -23,15 +37,30 @@ const phoneLoad = async() =>{
          </div>
        </div>   
        `;
-       phoneContainer.appendChild(phoneCard)
-   })
+       phoneContainer.appendChild(phoneCard);
+       
+   });
+  //  hided loading spinner
+  setASpinner(false)
  }
-phoneLoad();
+// phoneLoad();
 
 // handles search button
 
   const handlesSearch =()=>{
+       setASpinner(true)
         const searchInput= document.getElementById("search-input");
         const searchText = searchInput.value;
-          console.log(searchText)
+        console.log(searchText);
+        phoneLoad(searchText );
+        
+  };
+
+  const setASpinner =(isLoading) =>{
+         const toggleLoading = document.getElementById("loading-spinner");
+         if(isLoading){
+          toggleLoading.classList.remove("hidden")
+         }else{
+          toggleLoading.classList.add("hidden")
+         }
   }
